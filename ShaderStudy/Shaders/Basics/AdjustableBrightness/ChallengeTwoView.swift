@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct AdustableBrightnessView: View {
+struct ChallengeTwoView: View {
   @State private var brightness: Float = 0.5
   var body: some View {
     Image("face")
       .resizable()
       .scaledToFit()
-      .colorEffect(ShaderLibrary.adjustableBrightness(.float(brightness)))
+      .colorEffect(ShaderLibrary.challengeTwo(.float(brightness)))
       .overlay(alignment: .bottom) {
         Slider(value: $brightness, in: 0...1)
           .padding()
@@ -22,5 +22,5 @@ struct AdustableBrightnessView: View {
 }
 
 #Preview {
-    AdustableBrightnessView()
+    ChallengeTwoView()
 }

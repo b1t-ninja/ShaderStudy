@@ -8,7 +8,7 @@
 #include <metal_stdlib>
 using namespace metal;
 
-[[ stitchable ]] half4 adjustableBrightness(
+[[ stitchable ]] half4 challengeTwo(
                                             float2 position,
                                             half4 color,
                                             float brightness
