@@ -30,7 +30,6 @@ import simd
   )
  }
  ```
- 
  Any other params are passed directly from SwiftUI to the shader, not limited to the existing params.
  
  An example:
@@ -68,7 +67,6 @@ import simd
  */
 struct ShaderView: View {
   let makeShader: (SIMD2<Float>, Float, SIMD4<Float>, Float) -> Shader
-  var reqMouseDown: Bool = true
   
   let start = Date.now
   
@@ -77,10 +75,8 @@ struct ShaderView: View {
   @State private var mouseDown = false
   
   init(
-    reqMouseDown: Bool = true,
     _ makeShader: @escaping (SIMD2<Float>, Float, SIMD4<Float>, Float) -> Shader
   ) {
-    self.reqMouseDown = reqMouseDown
     self.makeShader = makeShader
   }
   
@@ -88,32 +84,15 @@ struct ShaderView: View {
     TimelineView(.animation) { tl in
       Rectangle()
         .contentShape(Rectangle())
-        .gesture(
-          DragGesture(minimumDistance: 0)
-            .onChanged { value in
-              mouseLocation = value.location
-              if !mouseDown {
-                mouseDown = true
-                mouseClickLocation = value.location
-              }
-            }
-            .onEnded { _ in
-              mouseDown = false
-            }
-        )
-        .overlay(
-          GeometryReader { _ in
-            Color.clear
-              .contentShape(Rectangle())
-              .onContinuousHover { phase in
-                if case .active(let location) = phase {
-                  if !reqMouseDown || mouseDown {
-                    mouseLocation = location
-                  }
-                }
-              }
+      
+      // Hover tracking (follow without pressing)
+        .onContinuousHover { phase in
+          guard case .active(let location) = phase else { return }
+          if !mouseDown {
+            mouseLocation = location
           }
-        )
+        }
+      
         .visualEffect { content, proxy in
           let size = proxy.size
           let iResolution = SIMD2<Float>(Float(size.width), Float(size.height))
