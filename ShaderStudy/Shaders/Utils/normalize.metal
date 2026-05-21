@@ -11,17 +11,23 @@
 #include <metal_stdlib>
 using namespace metal;
 
-inline half2 normalizedPosition(float2 size, float2 position) {
+// [-1, 1]
+inline half2 normalizedPositionCenter(float2 position, float2 size) {
   half2 uv01 = half2(position / max(size, float2(1.0f))); // avoid div-by-0
   half2 p = (uv01 - half2(0.5h)) * 2.0h;                  // -1..1
   p.x *= half(size.x / max(size.y, 1.0f));                // aspect correct
   return p;
 }
 
-inline half2 normalizedPositionPointFive(float2 size, float2 position) {
-  float2 uv = position / max(size, float2(1.0f));
-  float aspect = size.x / max(size.y, 1.0f);
-  return half2( (uv.x - 0.5f) * aspect,
-               (uv.y - 0.5f) );
+// (0,1)
+inline float2 normalizedPositionUnclamped(float2 position, float2 size) {
+  float2 safeSize = max(size, float2(1.0f));
+  return position / safeSize; // ~0..1 inside bounds
+}
+
+// [0, 1]
+inline float2 normalizedPosition(float2 position, float2 size) {
+  float2 safeSize = max(size, float2(1.0f));
+  return saturate(position / safeSize); // 0..1 inclusive
 }
 #endif
