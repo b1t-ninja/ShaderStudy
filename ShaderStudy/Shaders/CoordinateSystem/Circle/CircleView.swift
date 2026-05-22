@@ -10,13 +10,11 @@ import SwiftUI
 struct CircleView: View {
     var body: some View {
       ShaderView {size, time , mouse, _ in
-        SL.circleFollow(
+        SL.smoothCircle(
           .float2(size),
-          .float2(mouse),
-          .float(time),
         )
       }
-      .frame(width: 500, height: 500)
+      .frame(width: 400, height: 400)
     }
 }
 

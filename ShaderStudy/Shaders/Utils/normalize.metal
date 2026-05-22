@@ -10,6 +10,23 @@
 
 #include <metal_stdlib>
 using namespace metal;
+// Maps [-1, +1] -> [0, 1]
+inline float to01(float x)
+{
+  return x * 0.5f + 0.5f;
+}
+
+// float2/float3/float4 versions
+inline float2 to01(float2 x) { return x * 0.5f + 0.5f; }
+inline float3 to01(float3 x) { return x * 0.5f + 0.5f; }
+inline float4 to01(float4 x) { return x * 0.5f + 0.5f; }
+
+inline float2 aspect(float2 point, float2 size) {
+  float2 safeSize = max(size, float2(1.0f, 1.0f));
+  float a = safeSize.x / safeSize.y;   // width/height
+  point.x *= a;                            // distance measured in "height units"
+  return point;
+}
 
 // [-1, 1]
 inline half2 normalizedPositionCenter(float2 position, float2 size) {
